@@ -1,0 +1,12 @@
+
+<h1>Editing user info</h1>
+
+<%= link_to 'Cancel', profile_path %>
+
+<br/>
+
+<b>If you don't want to change your password leave password field blank.</b>
+
+<%= render :partial => 'form', :locals => { :urlaction => '/profile', :savebutton => 'Save user info' } %>
+
+

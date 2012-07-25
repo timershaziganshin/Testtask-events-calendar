@@ -1,0 +1,32 @@
+
+<%= link_to 'Logout', logout_path %> <br/>
+<%= link_to 'All events', events_path %>
+<%= link_to 'My events', myevents_path %> 
+
+<hr/>
+
+
+<div id="profile">
+  <h1>Your profile</h1>
+
+  <p id="notice"><%= multiline_notice(notice) %></p>
+
+  <%= link_to 'Edit info', "#", :id => "edit_info" %>
+
+    
+  <p>
+    <b>Email:</b>
+    <div id="email">
+      <%= @user.email %>
+    </div>
+  </p>
+
+  <p>
+    <b>Fullname:</b>
+    <div id="fullname">
+      <%= @user.fullname %>
+    </div>
+  </p>
+</div>
+
+

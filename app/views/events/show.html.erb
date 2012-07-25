@@ -1,0 +1,40 @@
+<div id="user">
+  <%= link_to 'Profile', profile_path %> |
+  <%= link_to 'Logout', logout_path %>
+</div>
+
+<%= link_to 'All events', events_path %>
+<%= link_to 'My events', myevents_path %> 
+
+<hr/>
+
+<div id="currentevent">
+  
+  <h1>Event <%= @event.name %></h1>
+  
+  <p id="notice"><%= multiline_notice(notice) %></p>
+
+   <div id="<%= @event.id %>">
+    <% if my_event?(@event) %>
+      <%= link_to 'Edit', '#', :id => 'editcurrentevent' %> | 
+      <%= link_to 'Delete event', @event, confirm: 'Are you sure?', method: :delete %>
+    <% end %>
+  </div>
+
+  <p>
+    <b>Date:</b>
+    <%= @event.date %>
+  </p>
+
+  <div id="repeat">
+    <%= repeated(@event.period) %>
+  </div>
+</div>
+
+<hr/>
+
+<%= render 'comments/form' %>
+
+<h2>Comments:</h2>
+
+<%= render @comments %>

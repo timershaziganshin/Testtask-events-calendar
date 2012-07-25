@@ -1,0 +1,52 @@
+<div id="user">
+  <%= link_to 'Profile', profile_path %> |
+  <%= link_to 'Logout', logout_path %>
+</div>
+
+
+
+<div id="eventsheader">
+  <%= link_to 'All events', events_path, all_events ? { :id => 'selected' } : {  } %>
+  <%= link_to 'My events', myevents_path, all_events ? {  } : { :id => 'selected' } %>
+</div>
+
+<hr/>
+
+<p id="notice"><%= multiline_notice(notice) %></p>
+
+
+<%= link_to 'New event', '#', :id => 'newevent' %>
+
+
+<table border>
+  <tr>
+    <th>Name</th>
+    <th>Date</th>
+    <th>Period</th>
+    <th>Author</th>
+    <th></th>
+    <th></th>
+  </tr>
+<% @events.each do |event| %>
+  <tr>
+    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent') : event.name %></td>
+    <td><%= event.date %></td>
+    <td><%= repeated(event.period) %></td>
+    <td><%= (!all_events || my_event?(event)) ? 'You' : event.user.name %></td>
+    <td><%= link_to event.comments.size.to_s + ' comments', event_path(event) %></td>
+    <td><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete) : '' %></td>
+  </tr>  
+<% end %>
+</table>
+<b>
+  <% if @events.empty? %>
+    <%= all_events ? 'No events have been created.' : 'You have no events.' %>
+  <% end %>
+</b>
+
+<br />
+
+
+<div id="editform">
+</div>
+

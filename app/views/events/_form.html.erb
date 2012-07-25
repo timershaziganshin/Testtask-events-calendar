@@ -1,0 +1,17 @@
+<%= form_for(@event) do |f| %>
+  <div class="field">
+    <%= f.label :name, 'Event name' %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br />
+    <%= f.date_select :date %>
+  </div>
+  <div class="select">
+    <%= f.label :period %><br/>
+    <%= f.select :period, [['No period', 0], ['Daily', 1], ['Weekly', 2], ['Monthly', 3], ['Yearly', 4]] %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

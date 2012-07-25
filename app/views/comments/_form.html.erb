@@ -1,0 +1,9 @@
+<%= form_for(@comment, :url => comment_event_path ) do |f| %>
+  <div class="field">
+    <%= f.label :text, 'Leave your comment:' %><br />
+    <%= f.text_field :text %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Post comment' %>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+// Place all the styles related to the events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#selected {
+  background: black;
+  color: white;
+}
+
+#editform {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background: white;
+  border: 1px solid black;
+}
