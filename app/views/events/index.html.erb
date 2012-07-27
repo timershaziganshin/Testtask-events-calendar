@@ -1,3 +1,5 @@
+<% content_for(:title) { " - #{ all_events ? 'All' : "#{ current_user.name }'s" } events #{ (defined? date) ? "at #{ date }" : '' }" } %>
+
 <div id="eventsheader">   
   <%= link_to 'All events', ((defined? date) ?  "/events/bydate/#{ convert_date(date) }" : events_path), :class => "btn small#{ all_events ? ' btn-inverse' : '' }" %>
   <%= link_to 'My events', ((defined? date) ? "/myevents/bydate/#{ convert_date(date) }" : myevents_path), :class => "btn small#{ all_events ? '' : ' btn-inverse' }" %>
@@ -23,11 +25,11 @@
   </tr>
 <% @events.each do |event| %>
   <tr>
-    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent', :class => 'btn btn-success') : event.name %></td>
+    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent', :class => 'btn btn-warning') : event.name %></td>
     <td><%= event.date %></td>
     <td><%= repeated(event.period) %></td>
     <td><%= (!all_events || my_event?(event)) ? 'You' : event.user.name %></td>
-    <td><%= link_to event.comments.size.to_s + ' comments', event_path(event) %></td>
+    <td width="100px"><%= link_to event.comments.size.to_s + ' comments', event_path(event) %></td>
     <td width="100px"><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete, :class => 'btn btn-danger') : '' %></td>
   </tr>  
 <% end %>

@@ -1,3 +1,5 @@
+<% content_for(:title) { " - #{ @user.name }'s profile" } %>
+
 <div id="eventsheader">   
   <%= link_to 'All events', events_path, :class => 'btn small' %>
   <%= link_to 'My events', myevents_path, :class => 'btn small' %>
