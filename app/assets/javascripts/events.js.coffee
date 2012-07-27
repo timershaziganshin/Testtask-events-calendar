@@ -9,6 +9,9 @@ $(document).ready( ->
     $.get("/events/" + e.target.parentNode.id + "/edit", {  }, (xml) ->
       $("#editform").html(xml)
       $("#editform").css("display", "block")
+      $("#editform").css("top", e.pageY)
+      $("#editform").css("left", e.pageX)
+      $("#datepicker").datepicker({ format: 'yyyy-mm-dd' })
     )
   )
 
@@ -25,6 +28,8 @@ $(document).ready( ->
     $.get("/events/new", {  }, (xml) ->
       $("#editform").html(xml)
       $("#editform").css("display", "block")
+      $("#editform").css("top", e.pageY)
+      $("#editform").css("left", e.pageX)
       $("#datepicker").datepicker({ format: 'yyyy-mm-dd' })
     )
   )

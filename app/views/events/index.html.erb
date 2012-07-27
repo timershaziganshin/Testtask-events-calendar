@@ -8,37 +8,39 @@
 </div> 
 <hr/> 
 
-<h1>Listing <%= all_events ? 'all' : 'your' %> events <%= (defined? date) ? "at #{ date }" : '' %></h1>
+<h1>Showing <%= all_events ? 'all' : 'your' %> events <%= (defined? date) ? "at #{ date }" : '' %></h1>
 
-<%= link_to 'New event', '#', :id => 'newevent', :class => 'btn' %>
+<% #link_to 'New event', '#', :id => 'newevent', :class => 'btn' %>
 
 <hr/>
 
-<table class="eventlisttable">
-  <tr>
-    <th>Name</th>
-    <th>Date</th>
-    <th>Period</th>
-    <th>Author</th>
-    <th></th>
-    <th></th>
-  </tr>
+<ul class="thumbnails">
+  <li class="span2">
+    <%= link_to (image_tag '/images/Plus_sign.png'), '#', :id => 'newevent', :class => 'thumbnail' %>
+  </li>
 <% @events.each do |event| %>
-  <tr>
-    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent', :class => 'btn btn-warning') : event.name %></td>
-    <td><%= event.date %></td>
-    <td><%= repeated(event.period) %></td>
-    <td><%= (!all_events || my_event?(event)) ? 'You' : event.user.name %></td>
-    <td width="100px"><%= link_to event.comments.size.to_s + ' comments', event_path(event), :class => 'btn btn-success' %></td>
-    <td width="100px"><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete, :class => 'btn btn-danger') : '' %></td>
-  </tr>  
-<% end %>
-</table>
-<b>
-  <% if @events.empty? %>
-    <%= all_events ? 'No events have been created.' : 'You have no events.' %>
+  <li class="span3">
+    <div class="thumbnail">
+      <div id="<%= event.id %>">
+        <%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent', :class => 'btn btn-warning') : event.name %><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete, :class => 'btn btn-danger') : '' %>
+      </div>
+      Date: <%= event.date %><br/>
+      <%= repeated(event.period) %><br/>
+      Author: <%= (!all_events || my_event?(event)) ? 'you' : event.user.name %><br/>
+      <%= link_to event.comments.size.to_s + ' comments', event_path(event), :class => 'btn btn-success' %>
+    </li>  
   <% end %>
-</b>
+  <% if @events.empty? %>
+    <li class="span3">
+      <div class="thumbnail">
+        <b>
+          <%= all_events ? 'No events have been created.' : 'You have no events.' %>        
+        </b>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
 
 <br />
 
