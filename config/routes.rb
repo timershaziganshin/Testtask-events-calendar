@@ -1,28 +1,28 @@
 Testtask2::Application.routes.draw do
 
-  root :to => "events#index"
-
-  #resources :comments
+  root :to => 'events#index'
 
   resources :events do
-    member do
-      post 'comment'
+    resources :comments, :only => [:create]
+    collection do
+      get 'bydate/:year/:month/:day/' => 'events#by_date'
     end
   end
-
-  get 'myevents', :controller => 'events', :action => 'my'
   
-  get 'profile', :controller => 'users', :action => 'show'
-  put 'profile', :controller => 'users', :action => 'update'
-  get 'profile/edit', :controller => 'users', :action => 'edit'
-
-  get 'login', :controller => 'users', :action => 'login'
-  post 'login', :controller => 'users', :action => 'process_login'  
-
-  get 'register', :controller => 'users', :action => 'new'
-  post 'register', :controller => 'users', :action => 'create'
+  get 'myevents' => 'events#my'
+  get 'myevents/bydate/:year/:month/:day/' => 'events#my_by_date'
   
-  match 'logout' => 'users#logout'
+  get 'profile' => 'users#show'
+  put 'profile' => 'users#update'
+  get 'profile/edit' => 'users#edit'
+
+  get 'login' => 'users#login'
+  post 'login' =>'users#process_login'  
+
+  get 'register' => 'users#new'
+  post 'register' => 'users#create'
+  
+  delete 'logout' => 'users#logout'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

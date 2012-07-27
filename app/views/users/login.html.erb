@@ -1,6 +1,5 @@
 <h1>Login</h1>
 
-<p id="notice"> <%= multiline_notice(notice) %> </p>
 
 <%= form_for(@user, :url => '/login') do |f| %>
   <div class="field">
@@ -12,7 +11,7 @@
     <%= f.password_field :password %>
   </div>
   <div class="actions">
-    <%= f.submit 'Login' %>
+    <%= f.submit 'Login', :class => 'btn large' %>
   </div>
 <% end %>
 

@@ -16,4 +16,46 @@ class Event < ActiveRecord::Base
 
   belongs_to :user
   has_many :comments
+
+  def self.events_at(search_date)
+    result = []
+    find_each do |event|
+      result << event if (event.date == search_date) || 
+                         (event.date < search_date) && (
+                          (event.period == DAILY) ||
+                          (event.period == WEEKLY) && event.integer_weeks_to_date?(search_date) ||
+                          (event.period == MONTHLY) && event.integer_months_to_date?(search_date) ||
+                          (event.period == YEARLY) && event.integer_years_to_date?(search_date)
+                         )
+    end
+    result
+  end
+
+  
+
+  def integer_weeks_to_date?(end_date)
+    result = (end_date - date).to_f / 7.0
+
+    result == result.floor
+  end
+
+  def integer_months_to_date?(end_date)
+    result = (end_date.year - date.year) * 12 + end_date.month - date.month
+
+    if (date.day <= Time.days_in_month(end_date.month, end_date.year)) || 
+       (end_date.day < Time.days_in_month(end_date.month, end_date.year))    
+      result += (end_date.day - date.day) / 31.0
+    end
+
+    result == result.floor
+  end
+
+  def integer_years_to_date?(end_date)
+    result = end_date.year - date.year
+
+    bool = (end_date.month != date.month) ||
+       (end_date.day != date.day) && ((end_date.month != 2) || Date.gregorian_leap?(end_date.year) || (date.day != 29) || (end_date.day != 28))             
+
+    !bool
+  end
 end

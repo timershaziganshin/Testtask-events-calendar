@@ -1,4 +1,4 @@
-<%= form_for(@comment, :url => comment_event_path ) do |f| %>
+<%= form_for(@comment, :url => event_comments_path(@event)) do |f| %>
   <div class="field">
     <%= f.label :text, 'Leave your comment:' %><br />
     <%= f.text_field :text %>

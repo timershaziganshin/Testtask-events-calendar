@@ -9,12 +9,16 @@ class User < ActiveRecord::Base
   has_many :events
   has_many :comments   
 
-  before_save do
-    if !self.password_confirmation.nil?
-      require 'digest/md5'
+  require 'digest/md5'
 
+  before_save do
+    if !self.password_confirmation.nil?      
       self.password = Digest::MD5.hexdigest(self.password)
     end
+  end
+
+  def self.auth(auth_email, auth_password)
+    find_by_email_and_password(auth_email, Digest::MD5.hexdigest(auth_password))
   end
 
   def name

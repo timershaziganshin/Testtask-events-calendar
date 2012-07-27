@@ -1,5 +1,11 @@
 module ApplicationHelper
-  def multiline_notice(notice)
-    notice.to_s.gsub(/\n/, "<br/>").html_safe
+  def user_logged_in?
+    !session[:user].nil?
   end
+
+  def user_not_logged_in?
+    !user_logged_in?
+  end
+
 end
+

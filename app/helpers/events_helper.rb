@@ -12,4 +12,8 @@ module EventsHelper
   def my_event?(event)
     session[:user] == event.user_id
   end
+
+  def convert_date(date)
+    [date.year, date.month, date.day].join('/').html_safe
+  end
 end

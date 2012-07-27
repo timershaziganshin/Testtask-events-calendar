@@ -1,17 +1,18 @@
+<div id="eventsheader">   
+  <%= link_to 'All events', events_path, :class => 'btn small' %>
+  <%= link_to 'My events', myevents_path, :class => 'btn small' %>
+  <a href="#" class="btn small" id="by_date" data-date="<%= Date.today %>" data-date-format="yyyy-mm-dd">By date</a>  
+</div> 
+<hr/> 
 
-<%= link_to 'Logout', logout_path %> <br/>
-<%= link_to 'All events', events_path %>
-<%= link_to 'My events', myevents_path %> 
-
-<hr/>
 
 
 <div id="profile">
   <h1>Your profile</h1>
 
-  <p id="notice"><%= multiline_notice(notice) %></p>
+  
 
-  <%= link_to 'Edit info', "#", :id => "edit_info" %>
+  <%= link_to 'Edit info', "#", :id => "edit_info", :class => 'btn btn-warning' %>
 
     
   <p>

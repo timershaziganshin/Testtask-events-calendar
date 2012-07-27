@@ -1,15 +1,13 @@
 class EventsController < ApplicationController
 
-  respond_to :html
-
   ONLY_REGISTERED = 'Only registered users can '
-  
+    
   def index # get /events
     if user_logged_in?     
       @events = Event.all  
       render :locals => { :all_events => true } 
     else       
-      redirect_to login_path, :error => ONLY_REGISTERED + 'view events'
+      redirect_to login_path, :alert => ONLY_REGISTERED + 'view events'
     end 
   end
 
@@ -18,23 +16,8 @@ class EventsController < ApplicationController
       @events = current_user.events
       render 'index', :locals => { :all_events => false }
     else
-      redirect_to login_path, :notice => ONLY_REGISTERED + 'view events'
+      redirect_to login_path, :alert => ONLY_REGISTERED + 'view events'
     end 
-  end
-
-  def comment # post /events/:id/comment
-    if user_logged_in?
-      @event = Event.find(params[:id])      
-      @comment = @event.comments.build(params[:comment])
-      @comment.user_id = current_user_id
-
-      if !@comment.save    
-        flash[:notice] = 'Error while saving comment'
-      end
-      redirect_to @event
-    else
-      redirect_to login_path, :notice => ONLY_REGISTERED + 'comment events'
-    end
   end
 
   def show # get /events/:id
@@ -44,7 +27,7 @@ class EventsController < ApplicationController
       @comment = Comment.new 
       render
     else 
-      redirect_to login_path, :notice => ONLY_REGISTERED + 'view comments'
+      redirect_to login_path, :alert => ONLY_REGISTERED + 'view comments'
     end
   end
 
@@ -53,7 +36,7 @@ class EventsController < ApplicationController
       @event = Event.new
       render :partial => 'new'
     else 
-      redirect_to login_path, :notice => ONLY_REGISTERED + 'create events'
+      redirect_to login_path, :alert => ONLY_REGISTERED + 'create events'
     end
   end
 
@@ -66,7 +49,7 @@ class EventsController < ApplicationController
         render 'public/404.html' 
       end
     else 
-      redirect_to login_path, :notice => ONLY_REGISTERED + 'edit events'
+      redirect_to login_path, :alert => ONLY_REGISTERED + 'edit events'
     end
   end
 
@@ -77,11 +60,11 @@ class EventsController < ApplicationController
       if @event.save
         redirect_to @event, notice: 'Event was successfully created'
       else
-        flash[:notice] = @event.errors.full_messages.join("\n")
+        @event.errors.full_messages.each.with_index { |msg, index| flash[index] = msg }
         redirect_to events_path
       end
     else
-      redirect_to login_path, :notice => ONLY_REGSITERED + 'create events'
+      redirect_to login_path, :alert => ONLY_REGSITERED + 'create events'
     end
   end
 
@@ -92,14 +75,14 @@ class EventsController < ApplicationController
         if @event.update_attributes(params[:event])
           flash[:notice] = 'Changes saved'
         else
-          flash[:notice] = @event.errors.full_messages.join("\n")
+          @event.errors.full_messages.each.with_index { |msg, index| flash[index] = msg }
         end
         redirect_to @event
       else
-        redirect_to @event, :notice => 'Users can edit only their events'
+        redirect_to @event, :alert => 'Users can edit only their events'
       end
     else
-      redirect_to login_path, :notice => ONLY_REGSITERED + 'edit events'
+      redirect_to login_path, :alert => ONLY_REGSITERED + 'edit events'
     end
   end
 
@@ -108,12 +91,28 @@ class EventsController < ApplicationController
       @event = Event.find(params[:id])
       if @event.user == current_user
         @event.destroy
-        redirect_to events_path, :notice => 'Event was succesfully deleted'
+        redirect_to :back, :notice => 'Event was succesfully deleted'
       else
-        redirect_to @event, :notice => 'Users can delete only their events'
+        redirect_to @event, :alert => 'Users can delete only their events'
       end
     else
-      redirect_to login_path, :notice => ONLY_REGSITERED + 'delete events'
+      redirect_to login_path, :alert => ONLY_REGSITERED + 'delete events'
     end
+  end
+
+  def by_date # get /events/bydate/:year/:month/:day/
+    date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+    @events = Event.events_at(date)
+    render 'index', :locals => { :all_events => true, :date => date }
+  rescue ArgumentError
+    redirect_to events_path, :alert => 'Wrong date'
+  end
+
+  def my_by_date # get /myevents/bydate/:year/:month/:day
+    date = Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+    @events = current_user.events.events_at(date)
+    render 'index', :locals => { :all_events => false, :date => date }
+  rescue ArgumentError
+    redirect_to myevents_path, :alert => 'Wrong date'
   end
 end

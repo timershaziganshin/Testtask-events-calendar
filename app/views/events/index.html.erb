@@ -1,24 +1,18 @@
-<div id="user">
-  <%= link_to 'Profile', profile_path %> |
-  <%= link_to 'Logout', logout_path %>
-</div>
+<div id="eventsheader">   
+  <%= link_to 'All events', ((defined? date) ?  "/events/bydate/#{ convert_date(date) }" : events_path), :class => "btn small#{ all_events ? ' btn-inverse' : '' }" %>
+  <%= link_to 'My events', ((defined? date) ? "/myevents/bydate/#{ convert_date(date) }" : myevents_path), :class => "btn small#{ all_events ? '' : ' btn-inverse' }" %>
+  <a href="#" class="btn small <%= (defined? date) ? 'btn-inverse' : '' %>" id="<%= all_events ? 'by_date' : 'my_by_date' %>" data-date="<%= (defined? date) ? date : Date.today %>" data-date-format="yyyy-mm-dd">By date<%= (defined? date) ? ": #{ date }" : '' %></a>  
+  <%= (defined? date) ? (link_to 'Remove date filter', all_events ? events_path : myevents_path, :class => 'btn small') : '' %>
+</div> 
+<hr/> 
 
+<h1>Listing <%= all_events ? 'all' : 'your' %> events <%= (defined? date) ? "at #{ date }" : '' %></h1>
 
-
-<div id="eventsheader">
-  <%= link_to 'All events', events_path, all_events ? { :id => 'selected' } : {  } %>
-  <%= link_to 'My events', myevents_path, all_events ? {  } : { :id => 'selected' } %>
-</div>
+<%= link_to 'New event', '#', :id => 'newevent', :class => 'btn' %>
 
 <hr/>
 
-<p id="notice"><%= multiline_notice(notice) %></p>
-
-
-<%= link_to 'New event', '#', :id => 'newevent' %>
-
-
-<table border>
+<table class="eventlisttable">
   <tr>
     <th>Name</th>
     <th>Date</th>
@@ -29,12 +23,12 @@
   </tr>
 <% @events.each do |event| %>
   <tr>
-    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent') : event.name %></td>
+    <td id="<%= event.id %>"><%= (!all_events || my_event?(event)) ? (link_to event.name, '#', :id => 'editevent', :class => 'btn btn-success') : event.name %></td>
     <td><%= event.date %></td>
     <td><%= repeated(event.period) %></td>
     <td><%= (!all_events || my_event?(event)) ? 'You' : event.user.name %></td>
     <td><%= link_to event.comments.size.to_s + ' comments', event_path(event) %></td>
-    <td><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete) : '' %></td>
+    <td width="100px"><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete, :class => 'btn btn-danger') : '' %></td>
   </tr>  
 <% end %>
 </table>

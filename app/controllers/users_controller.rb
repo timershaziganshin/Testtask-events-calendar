@@ -1,19 +1,14 @@
 class UsersController < ApplicationController
 
-  require 'digest/md5'
-
-  respond_to :html
-
   ALREADY_LOGGED = 'You are already logged in'
   NOT_LOGGED = 'You are not logged in'
-  SAVING_ERRORS = 'Following'
   
   def show # get /profile
     if user_logged_in?
       @user = current_user
       render
     else      
-      redirect_to login_path, :notice => NOT_LOGGED
+      redirect_to login_path, :alert => NOT_LOGGED
     end
   end
 
@@ -27,11 +22,10 @@ class UsersController < ApplicationController
   end
 
   def process_login # post /login
-    if user_not_logged_in?
-      params[:user][:password] = Digest::MD5.hexdigest(params[:user][:password])
-      user = User.find_by_email_and_password(params[:user][:email], params[:user][:password])      
+    if user_not_logged_in?      
+      user = User.auth(params[:user][:email], params[:user][:password])      
       if user.nil?
-        flash[:notice] = 'Wrong email/password'
+        flash[:alert] = 'Wrong email/password'
         @user = User.new
         render 'login'
       else
@@ -58,8 +52,8 @@ class UsersController < ApplicationController
       if user.save
         session[:user] = user.id        
         redirect_to profile_path, :notice => 'Successfully registered'
-      else        
-        flash[:notice] = user.errors.full_messages.join("\n")
+      else             
+        user.errors.full_messages.each.with_index { |msg, index| flash[index] = msg }
         redirect_to register_path
       end
     else
@@ -77,15 +71,15 @@ class UsersController < ApplicationController
       if user.update_attributes(params[:user])
         flash[:notice] = 'Changes saved'
       else
-        flash[:notice] = user.errors.full_messages.join("\n")
+        user.errors.full_messages.each.with_index { |msg, index| flash[index] = msg }
       end
       redirect_to profile_path      
     else
-      redirect_to login_path, :notice => NOT_LOGGED
+      redirect_to login_path, :alert => NOT_LOGGED
     end 
   end
 
-  def logout # any /logout
+  def logout # delete /logout
     if user_logged_in?   
       session[:user] = nil
       redirect_to login_path
@@ -99,7 +93,7 @@ class UsersController < ApplicationController
       @user = current_user
       render
     else
-      redirect_to login_path, :notice => NOT_LOGGED
+      redirect_to login_path, :alert => NOT_LOGGED
     end
   end
 end
