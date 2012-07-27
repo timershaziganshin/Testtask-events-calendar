@@ -29,7 +29,7 @@
     <td><%= event.date %></td>
     <td><%= repeated(event.period) %></td>
     <td><%= (!all_events || my_event?(event)) ? 'You' : event.user.name %></td>
-    <td width="100px"><%= link_to event.comments.size.to_s + ' comments', event_path(event) %></td>
+    <td width="100px"><%= link_to event.comments.size.to_s + ' comments', event_path(event), :class => 'btn btn-success' %></td>
     <td width="100px"><%= (!all_events || my_event?(event)) ? (link_to 'Delete event', event, confirm: 'Are you sure?', method: :delete, :class => 'btn btn-danger') : '' %></td>
   </tr>  
 <% end %>
