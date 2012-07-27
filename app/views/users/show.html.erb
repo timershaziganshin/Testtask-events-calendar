@@ -22,12 +22,14 @@
     </div>
   </p>
 
-  <p>
-    <b>Fullname:</b>
-    <div id="fullname">
-      <%= @user.fullname %>
-    </div>
-  </p>
+  <% unless @user.fullname.nil? || @user.fullname.empty? %>
+    <p>
+      <b>Fullname:</b>
+      <div id="fullname">
+        <%= @user.fullname %>
+      </div>
+    </p>
+  <% end %>
 </div>
 
 

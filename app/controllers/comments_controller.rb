@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
       @comment = @event.comments.build(params[:comment])
       @comment.user_id = current_user_id
       
-      if !@comment.save
+      unless @comment.save
         flash[:alert] = 'Error while saving comment'
       end
       redirect_to @event
