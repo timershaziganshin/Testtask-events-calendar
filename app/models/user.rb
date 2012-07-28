@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   require 'digest/md5'
 
   before_save do
-    if !self.password_confirmation.nil?      
+    unless password_confirmation.nil?      
       self.password = Digest::MD5.hexdigest(self.password)
     end
   end

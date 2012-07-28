@@ -19,19 +19,22 @@ class Event < ActiveRecord::Base
 
   def self.events_at(search_date)
     result = []
-    find_each do |event|
-      result << event if (event.date == search_date) || 
-                         (event.date < search_date) && (
-                          (event.period == DAILY) ||
-                          (event.period == WEEKLY) && event.integer_weeks_to_date?(search_date) ||
-                          (event.period == MONTHLY) && event.integer_months_to_date?(search_date) ||
-                          (event.period == YEARLY) && event.integer_years_to_date?(search_date)
-                         )
-    end
+
+    find_each { |event| result << event if event.takes_place_at?(search_date) }    
+
     result
   end
 
-  
+  def takes_place_at?(search_date)
+    (date == search_date) || 
+    (date < search_date) && 
+    ((period == DAILY) ||
+    (period == WEEKLY) && integer_weeks_to_date?(search_date) ||
+    (period == MONTHLY) && integer_months_to_date?(search_date) ||
+    (period == YEARLY) && integer_years_to_date?(search_date))    
+  end
+
+  private
 
   def integer_weeks_to_date?(end_date)
     result = (end_date - date).to_f / 7.0
