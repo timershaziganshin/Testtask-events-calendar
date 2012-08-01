@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  helper_method :user_logged_in?, :user_not_logged_in?, :current_user
+
   def user_logged_in?
     !session[:user].nil?
   end
@@ -10,7 +12,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    User.find(session[:user])
+    @current_user ||= User.find(session[:user])
   end
 
   def current_user_id
