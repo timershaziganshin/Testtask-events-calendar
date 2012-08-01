@@ -17,24 +17,18 @@ class Event < ActiveRecord::Base
   belongs_to :user
   has_many :comments
 
-  def self.events_at(search_date)
-    result = []
+  scope :before_date_and_with_period, lambda { |search_date, period| where('date < ? and period = ?', search_date, period) }
 
-    find_each { |event| result << event if event.takes_place_at?(search_date) }    
+  def self.events_at(search_date)
+    result = where(:date => search_date)
+
+    result += before_date_and_with_period(search_date, DAILY)
+    result += before_date_and_with_period(search_date, WEEKLY).select { |event| event.integer_weeks_to_date?(search_date) }
+    result += before_date_and_with_period(search_date, MONTHLY).select { |event| event.integer_months_to_date?(search_date) }
+    result += before_date_and_with_period(search_date, YEARLY).select { |event| event.integer_years_to_date?(search_date) }
 
     result
   end
-
-  def takes_place_at?(search_date)
-    (date == search_date) || 
-    (date < search_date) && 
-    ((period == DAILY) ||
-    (period == WEEKLY) && integer_weeks_to_date?(search_date) ||
-    (period == MONTHLY) && integer_months_to_date?(search_date) ||
-    (period == YEARLY) && integer_years_to_date?(search_date))    
-  end
-
-  private
 
   def integer_weeks_to_date?(end_date)
     result = (end_date - date).to_f / 7.0
